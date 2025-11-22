@@ -13,6 +13,7 @@ class Receipt:
         self._discounts = []
 
     def total_price(self):
+        """compute the final amount including discounts ."""
         total = 0
         for item in self.items:
             total += item.total_price
@@ -21,6 +22,11 @@ class Receipt:
         return total
 
     def add_product(self, product, quantity, price, total_price):
+        # Validate inputs
+        if total_price < 0:
+            raise ValueError("Total price cannot be negative")
+        if quantity <= 0:
+            raise ValueError("Quantity must be positive")
         self._items.append(ReceiptItem(product, quantity, price, total_price))
 
     def add_discount(self, discount):
