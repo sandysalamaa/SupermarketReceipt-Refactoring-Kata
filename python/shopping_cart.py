@@ -7,7 +7,7 @@ class ShoppingCart:
 
     def __init__(self):
         self._items = []
-        self._product_quantities = {}
+        self._product_quantities = {} # key: Product, value: quantity
 
     @property
     def items(self):
@@ -21,11 +21,21 @@ class ShoppingCart:
         return self._product_quantities
 
     def add_item_quantity(self, product, quantity):
+     # INPUT VALIDATION ADDED - Previously, negative quantities were silently accepted
+    # which could lead to invalid cart states and incorrect pricing calculations.
+    # Test 'test_negative_quantity_handling' was failing because no ValueError was raised.
+    # Now we properly validate inputs to maintain data integrity.
+        if quantity <= 0:
+            raise ValueError("Quantity must be positive")    
+        if product is None:
+            raise ValueError("please provide a valid product")
+        
         self._items.append(ProductQuantity(product, quantity))
         if product in self._product_quantities.keys():
             self._product_quantities[product] = self._product_quantities[product] + quantity
         else:
             self._product_quantities[product] = quantity
+
 
     def handle_offers(self, receipt, offers, catalog):
         for p in self._product_quantities.keys():

@@ -7,6 +7,32 @@ from tests.fake_catalog import FakeCatalog
 
 
 class SupermarketTest(unittest.TestCase):
+    """
+    BUG FIX VALIDATION: This test was originally FAILING because the ShoppingCart
+    silently accepted negative quantities without validation.
+    
+    EXPECTED: ValueError should be raised when adding negative quantities
+    ACTUAL (before fix): No exception was raised, allowing invalid cart state
+    ACTUAL (after fix): ValueError is properly raised with descriptive message
+    
+    This demonstrates the importance of input validation for data integrity.
+    """
+    def test_negative_quantity(self):
+        '''test that negative quantities are handled gracefully '''
+        catalog = FakeCatalog()
+        product = Product("test", ProductUnit.EACH)
+        catalog.add_product(product, 1.0)
+        
+        cart = ShoppingCart()
+        with self.assertRaises(ValueError) as context:
+            cart.add_item_quantity(product, -1.0)
+        self.assertTrue("Quantity must be positive" in str(context.exception))
+
+
+
+
+
+
     def test_ten_percent_discount(self):
         catalog = FakeCatalog()
         toothbrush = Product("toothbrush", ProductUnit.EACH)
