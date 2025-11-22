@@ -139,7 +139,7 @@ class ShoppingCart:
 
     # OLD CODE
     # def handle_offers(self, receipt, offers, catalog):
-
+  
         # for p in self._product_quantities.keys():
         #     quantity = self._product_quantities[p]
         #     if p in offers.keys():
@@ -154,6 +154,7 @@ class ShoppingCart:
         #         elif offer.offer_type == SpecialOfferType.TWO_FOR_AMOUNT:
         #             x = 2
         #             if quantity_as_int >= 2:
+        
         #                 total = offer.argument * (quantity_as_int / x) + quantity_as_int % 2 * unit_price
         #                 discount_n = unit_price * quantity - total
         #                 discount = Discount(p, "2 for " + str(offer.argument), -discount_n)
