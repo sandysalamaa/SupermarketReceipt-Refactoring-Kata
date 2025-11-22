@@ -47,14 +47,16 @@ class SupermarketTest(unittest.TestCase):
         product = Product("test", ProductUnit.EACH)
         catalog.add_product(product, 10.0)
         teller = Teller(catalog)
-        teller.add_special_offer(SpecialOfferType.TWO_FOR_AMOUNT, product,None)
-        teller.add_special_offer(SpecialOfferType.TWO_FOR_AMOUNT, product,15.0)
+        
+        teller.add_special_offer(SpecialOfferType.TWO_FOR_AMOUNT, product, 15.0)
+        teller.add_special_offer(SpecialOfferType.TEN_PERCENT_DISCOUNT, product, 10.0)
         
         cart = ShoppingCart()
         cart.add_item_quantity(product, 3)
         receipt = teller.checks_out_articles_from(cart)
-        # to verify only one discount is applied
+        
         self.assertEqual(1, len(receipt.discounts))
+
 
     def test_zero_quantity_handling(self):
         """Test that zero quantities raise ValueError"""
@@ -95,3 +97,14 @@ class SupermarketTest(unittest.TestCase):
         self.assertEqual(2.5, receipt_item.quantity)
 
 
+    def test_empty_cart_checkout(self):
+        """Test checking out with empty cart"""
+        catalog = FakeCatalog()
+        teller = Teller(catalog)
+        cart = ShoppingCart()
+        
+        receipt = teller.checks_out_articles_from(cart)
+        
+        self.assertEqual(0, receipt.total_price())
+        self.assertEqual(0, len(receipt.items))
+        self.assertEqual(0, len(receipt.discounts))
