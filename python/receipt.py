@@ -39,3 +39,11 @@ class Receipt:
     @property
     def discounts(self):
         return self._discounts[:]
+    
+    def get_savings_summary(self):
+        """
+        ENHANCEMENT: Shows total savings from discounts
+        for business value thinking - customers love seeing savings!
+        """
+        total_savings = sum(discount.discount_amount for discount in self.discounts)
+        return abs(total_savings)  # return positive number for savings

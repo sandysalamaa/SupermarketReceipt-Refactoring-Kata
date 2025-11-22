@@ -136,6 +136,33 @@ class ShoppingCart:
             return Discount(product, "3 for 2", -discount_amount)
         return None
     
+    def get_cart_summary(self):
+        """
+        ENHANCEMENT: Provides quick cart summary.
+        """
+        total_items = len(self._items)
+        total_products = len(self._product_quantities)
+        total_quantity = sum(self._product_quantities.values())
+        
+        return {
+            'total_items': total_items,
+            'total_products': total_products,
+            'total_quantity': total_quantity
+        }
+    
+    def get_cross_sell_recommendations(self, catalog, product_associations):
+        """
+        AMAZON-STYLE: "Customers who bought this also bought..."
+        """
+        recommendations = set()
+        
+        for product in self._product_quantities:
+            if product.name in product_associations:   #product_associations is a dict of related products can be bought
+                for associated_product in product_associations[product.name]:
+                    if associated_product not in self._product_quantities:
+                        recommendations.add(associated_product)
+        
+        return list(recommendations)[:3]  # top 3 recommendations
 
     # OLD CODE
     # def handle_offers(self, receipt, offers, catalog):
@@ -154,7 +181,7 @@ class ShoppingCart:
         #         elif offer.offer_type == SpecialOfferType.TWO_FOR_AMOUNT:
         #             x = 2
         #             if quantity_as_int >= 2:
-        
+
         #                 total = offer.argument * (quantity_as_int / x) + quantity_as_int % 2 * unit_price
         #                 discount_n = unit_price * quantity - total
         #                 discount = Discount(p, "2 for " + str(offer.argument), -discount_n)
